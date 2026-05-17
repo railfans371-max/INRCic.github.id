@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>INRC • Japanese Railway Mobile</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+-webkit-tap-highlight-color:transparent;
+scroll-behavior:smooth;
+}
+
+body{
+background:#050816;
+color:white;
+overflow-x:hidden;
+}
+
+/* ========================= */
+/* LOADING */
+/* ========================= */
+
+#loading{
+position:fixed;
+width:100%;
+height:100%;
+background:#050816;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:9999999;
+transition:1s;
+}
+
+.loader-train{
+font-size:55px;
+animation:trainMove 2s linear infinite;
+filter:drop-shadow(0 0 20px #00aeff);
+}
+
+.loading-text{
+margin-top:20px;
+font-size:17px;
+letter-spacing:3px;
+font-weight:700;
+color:#7dd3fc;
+}
+
+@keyframes trainMove{
+0%{
+transform:translateX(-20px);
+}
+50%{
+transform:translateX(20px);
+}
+100%{
+transform:translateX(-20px);
+}
+}
+
+/* ========================= */
+/* PINTU KERETA */
+/* ========================= */
+
+.door-container{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:999999;
+pointer-events:none;
+overflow:hidden;
+}
+
+.door{
+position:absolute;
+top:0;
+width:50%;
+height:100%;
+background:
+linear-gradient(to bottom,#0f172a,#020617);
+transition:2s cubic-bezier(.77,0,.18,1);
+}
+
+.left-door{
+left:0;
+border-right:2px solid rgba(255,255,255,0.08);
+}
+
+.right-door{
+right:0;
+border-left:2px solid rgba(255,255,255,0.08);
+}
+
+.door-text{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:18px;
+font-weight:700;
+letter-spacing:2px;
+text-align:center;
+text-shadow:0 0 15px #00aeff;
+animation:pulseText 2s infinite;
+}
+
+@keyframes pulseText{
+0%{opacity:0.6;}
+50%{opacity:1;}
+100%{opacity:0.6;}
+}
+
+.door-open .left-door{
+transform:translateX(-100%);
+}
+
+.door-open .right-door{
+transform:translateX(100%);
+}
+
+.door-open .door-text{
+opacity:0;
+transition:1s;
+}
+
+/* ========================= */
+/* BACKGROUND */
+/* ========================= */
+
+.bg{
+position:fixed;
+width:100%;
+height:100%;
+background:
+linear-gradient(to bottom,#081124,#050816);
+z-index:-5;
+}
+
+.grid{
+position:fixed;
+width:100%;
+height:100%;
+background-image:
+linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+background-size:35px 35px;
+animation:gridMove 8s linear infinite;
+z-index:-4;
+}
+
+@keyframes gridMove{
+from{
+transform:translateY(0);
+}
+to{
+transform:translateY(35px);
+}
+}
+
+/* ========================= */
+/* NAVBAR */
+/* ========================= */
+
+nav{
+position:fixed;
+top:0;
+width:100%;
+padding:16px 22px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:rgba(0,0,0,0.25);
+backdrop-filter:blur(12px);
+border-bottom:1px solid rgba(255,255,255,0.08);
+z-index:1000;
+}
+
+.logo{
+font-size:30px;
+font-weight:900;
+background:linear-gradient(90deg,#00aeff,#00ffd5);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.menu{
+font-size:28px;
+}
+
+/* ========================= */
+/* STATUS OPS */
+/* ========================= */
+
+.ops-status{
+position:fixed;
+top:80px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+align-items:center;
+gap:10px;
+padding:12px 20px;
+background:rgba(0,0,0,0.4);
+border:1px solid rgba(255,255,255,0.08);
+backdrop-filter:blur(12px);
+border-radius:50px;
+z-index:999;
+box-shadow:0 0 20px rgba(0,174,255,0.15);
+}
+
+.status-dot{
+width:12px;
+height:12px;
+border-radius:50%;
+background:#00ff6a;
+box-shadow:
+0 0 10px #00ff6a,
+0 0 25px #00ff6a;
+animation:blink 1s infinite;
+}
+
+.status-text{
+font-size:11px;
+font-weight:700;
+letter-spacing:1px;
+}
+
+@keyframes blink{
+0%{opacity:1;}
+50%{opacity:0.4;}
+100%{opacity:1;}
+}
+
+/* ========================= */
+/* HERO */
+/* ========================= */
+
+.hero{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:120px 24px 80px;
+text-align:center;
+position:relative;
+overflow:hidden;
+}
+
+.hero::before{
+content:'';
+position:absolute;
+width:320px;
+height:320px;
+background:#00aeff20;
+border-radius:50%;
+filter:blur(60px);
+animation:pulse 5s infinite;
+}
+
+@keyframes pulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.15);}
+100%{transform:scale(1);}
+}
+
+.badge{
+display:inline-block;
+padding:10px 18px;
+border-radius:50px;
+background:rgba(0,174,255,0.12);
+border:1px solid rgba(0,174,255,0.3);
+font-size:12px;
+color:#7dd3fc;
+margin-bottom:24px;
+}
+
+.hero h1{
+font-size:56px;
+font-weight:900;
+line-height:1;
+margin-bottom:20px;
+}
+
+.hero h1 span{
+background:linear-gradient(90deg,#00aeff,#00ffd5);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.hero p{
+font-size:15px;
+line-height:1.8;
+color:#cbd5e1;
+margin-bottom:34px;
+}
+
+.btn{
+display:inline-block;
+padding:15px 32px;
+border-radius:18px;
+background:linear-gradient(90deg,#00aeff,#00ffd5);
+color:white;
+font-weight:700;
+text-decoration:none;
+box-shadow:0 0 25px rgba(0,174,255,0.3);
+transition:0.3s;
+}
+
+.btn:hover{
+transform:scale(1.05);
+}
+
+/* ========================= */
+/* KERETA */
+/* ========================= */
+
+.live-train{
+margin-top:50px;
+font-size:40px;
+white-space:nowrap;
+animation:realTrain 9s linear infinite;
+filter:drop-shadow(0 0 18px #00aeff);
+}
+
+@keyframes realTrain{
+0%{
+transform:translateX(-130%);
+}
+100%{
+transform:translateX(130%);
+}
+}
+
+/* ========================= */
+/* SECTION */
+/* ========================= */
+
+section{
+padding:90px 22px;
+}
+
+.section-title{
+font-size:34px;
+font-weight:800;
+text-align:center;
+margin-bottom:45px;
+}
+
+.section-title span{
+background:linear-gradient(90deg,#00aeff,#00ffd5);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+/* ========================= */
+/* CARD */
+/* ========================= */
+
+.cards{
+display:flex;
+flex-direction:column;
+gap:18px;
+}
+
+.card{
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.08);
+padding:28px;
+border-radius:24px;
+backdrop-filter:blur(12px);
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-6px);
+border-color:#00aeff;
+box-shadow:0 0 25px rgba(0,174,255,0.15);
+}
+
+.card h3{
+font-size:21px;
+margin-bottom:12px;
+}
+
+.card p{
+font-size:14px;
+line-height:1.8;
+color:#cbd5e1;
+}
+
+/* ========================= */
+/* STATS */
+/* ========================= */
+
+.stats{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:18px;
+margin-top:30px;
+}
+
+.stat{
+background:rgba(255,255,255,0.05);
+padding:24px;
+border-radius:22px;
+text-align:center;
+border:1px solid rgba(255,255,255,0.08);
+}
+
+.stat h2{
+font-size:34px;
+background:linear-gradient(90deg,#00aeff,#00ffd5);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+margin-bottom:8px;
+}
+
+/* ========================= */
+/* GALLERY */
+/* ========================= */
+
+.gallery{
+display:flex;
+flex-direction:column;
+gap:18px;
+}
+
+.gallery img{
+width:100%;
+height:220px;
+object-fit:cover;
+border-radius:22px;
+border:1px solid rgba(255,255,255,0.08);
+transition:0.3s;
+}
+
+.gallery img:hover{
+transform:scale(1.02);
+}
+
+/* ========================= */
+/* JAPAN LINE */
+/* ========================= */
+
+.japan-line{
+height:5px;
+width:100%;
+background:linear-gradient(90deg,
+white 0%,
+white 25%,
+#00aeff 25%,
+#00aeff 50%,
+red 50%,
+red 75%,
+white 75%,
+white 100%);
+}
+
+/* ========================= */
+/* FOOTER */
+/* ========================= */
+
+footer{
+padding:35px 20px;
+text-align:center;
+font-size:13px;
+color:#94a3b8;
+}
+
+/* ========================= */
+/* MOBILE ONLY */
+/* ========================= */
+
+@media(min-width:768px){
+
+body{
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+background:black;
+}
+
+body::before{
+content:'Website ini khusus mobile 📱';
+color:white;
+font-size:28px;
+font-weight:700;
+}
+
+nav,
+.hero,
+section,
+footer,
+.bg,
+.grid,
+#loading,
+.ops-status,
+.door-container{
+display:none;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+
+<div id="loading">
+
+<div class="loader-train">
+🚄🚃🚃🚃
+</div>
+
+<div class="loading-text">
+LOADING INRC...
+</div>
+
+</div>
+
+<!-- PINTU -->
+
+<div class="door-container" id="doorContainer">
+
+<div class="door left-door"></div>
+<div class="door right-door"></div>
+
+<div class="door-text">
+🚆 SELAMAT DATANG DI INRC 🚆
+</div>
+
+</div>
+
+<!-- BACKGROUND -->
+
+<div class="bg"></div>
+<div class="grid"></div>
+
+<!-- NAVBAR -->
+
+<nav>
+
+<div class="logo">
+INRC
+</div>
+
+<div class="menu">
+☰
+</div>
+
+</nav>
+
+<!-- STATUS OPS -->
+
+<div class="ops-status">
+
+<div class="status-dot"></div>
+
+<div class="status-text">
+OPS ONLINE • TRAIN ACTIVE
+</div>
+
+</div>
+
+<!-- HERO -->
+
+<section class="hero">
+
+<div>
+
+<div class="badge">
+🚆 Japanese Railway • KAI/KRL • Roblox OPS
+</div>
+
+<h1>
+WELCOME TO <span>INRC</span>
+</h1>
+
+<p>
+Komunitas Roblox pecinta operasional kereta realistis dengan tema KAI, subway, dan KRL modern.
+</p>
+
+<a href="#about" class="btn">
+MASUK STASIUN
+</a>
+
+<div class="live-train">
+🚄🚃🚃🚃🚃🚃
+</div>
+
+</div>
+
+</section>
+
+<div class="japan-line"></div>
+
+<!-- ABOUT -->
+
+<section id="about">
+
+<h2 class="section-title">
+Tentang <span>INRC</span>
+</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>🚉 OPS Realistis</h3>
+<p>
+Simulasi operasional kereta realistis ala Jepang dan KAI.
+</p>
+</div>
+
+<div class="card">
+<h3>🚄 Railway Modern</h3>
+<p>
+Tema subway Jepang, commuter line, dan stasiun futuristik.
+</p>
+</div>
+
+<div class="card">
+<h3>🎮 Roblox Community</h3>
+<p>
+Komunitas aktif pecinta railway Roblox Indonesia.
+</p>
+</div>
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<h2>200+</h2>
+<p>Member</p>
+</div>
+
+<div class="stat">
+<h2>30</h2>
+<p>STAFF OPS</p>
+</div>
+
+<div class="stat">
+<h2>24/7</h2>
+<p>Active</p>
+</div>
+
+<div class="stat">
+<h2>4</h2>
+<p>Admin</p>
+</div>
+
+</div>
+
+</section>
+
+<footer>
+© 2026 INRC • Japanese Railway Mobile Experience
+</footer>
+
+<!-- SUARA -->
+
+<audio autoplay loop>
+<source src="https://files.catbox.moe/7m3v4q.mp3" type="audio/mpeg">
+</audio>
+
+<!-- SCRIPT -->
+
+<script>
+
+/* LOADING */
+
+window.addEventListener("load",()=>{
+
+setTimeout(()=>{
+
+document.getElementById("loading").style.opacity="0";
+
+setTimeout(()=>{
+document.getElementById("loading").style.display="none";
+},1000);
+
+},2200);
+
+});
+
+/* PINTU */
+
+window.addEventListener("load",()=>{
+
+setTimeout(()=>{
+
+document
+.getElementById("doorContainer")
+.classList.add("door-open");
+
+setTimeout(()=>{
+
+document
+.getElementById("doorContainer")
+.style.display="none";
+
+},2500);
+
+},1000);
+
+});
+
+/* STATUS OPS */
+
+const statusText =
+document.querySelector(".status-text");
+
+const statusDot =
+document.querySelector(".status-dot");
+
+const statusList = [
+
+{
+text:"OPS ONLINE • TRAIN ACTIVE",
+color:"#00ff6a"
+},
+
+{
+text:"COMMUTER SERVICE RUNNING",
+color:"#00aeff"
+},
+
+{
+text:"DISPATCHER ACTIVE • SIGNAL CLEAR",
+color:"#ffd500"
+},
+
+{
+text:"KERETA MENUJU STASIUN INRC",
+color:"#ff6600"
+}
+
+];
+
+setInterval(()=>{
+
+const random =
+statusList[Math.floor(Math.random()*statusList.length)];
+
+statusText.innerHTML = random.text;
+
+statusDot.style.background = random.color;
+
+statusDot.style.boxShadow =
+`0 0 10px ${random.color},
+0 0 25px ${random.color}`;
+
+},4000);
+
+</script>
+
+</body>
+</html>
